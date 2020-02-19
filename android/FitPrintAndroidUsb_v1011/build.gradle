@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('FitPrintAndroidUsb_v1011.jar'))
