@@ -30,7 +30,7 @@ public class FujitsuThermalPrinter extends Plugin {
     static final int REQUEST_CAPACITOR_CODE = 12345;
 
     FitPrintAndroidUsb mPrinter = new FitPrintAndroidUsb();
-    Context context = getContext();
+    Context context = null;
     private UsbManager mUsbManager = null;
     private PendingIntent mPermissionIntent = null;
 
@@ -69,22 +69,24 @@ public class FujitsuThermalPrinter extends Plugin {
 
 
     public void load() {
+        context = getContext();
         mUsbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
         mPermissionIntent = PendingIntent.getBroadcast(context, REQUEST_CAPACITOR_CODE, new Intent(ACTION_USB_PERMISSION), 0);
         IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
         context.registerReceiver(mUsbReceiver, filter);
     }
 
-    private void GetUsbDevice(PluginCall call) {
+    @PluginMethod()
+    public void GetUsbDevice(PluginCall call) {
         mUsbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
         HashMap<String, UsbDevice> deviceList = mUsbManager.getDeviceList();
         Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
+        Boolean hasNext = deviceIterator.hasNext();
 
         while(deviceIterator.hasNext()) {
             mDevice = deviceIterator.next();
             int nProduct = mDevice.getProductId();
             int nVendor = mDevice.getVendorId();
-
             if(nVendor == 0x04C5 &&
                     (nProduct == 0x117A ||
                             nProduct == 0x11CA ||
@@ -96,9 +98,15 @@ public class FujitsuThermalPrinter extends Plugin {
                 call.error("Not Find Printer");
             }
         }
+
+        if(!hasNext){
+            call.error("Not Find Printer");
+        }
+
     }
 
 
+    @PluginMethod()
     public void Connect(PluginCall call) {
         mRtn = mPrinter.Connect(mUsbManager, mDevice);
         saveCall(call);
@@ -112,6 +120,7 @@ public class FujitsuThermalPrinter extends Plugin {
             }});
     }
 
+    @PluginMethod()
     public void Disconnect(PluginCall call) {
         mPrinter.Disconnect();
         saveCall(call);
@@ -132,6 +141,7 @@ public class FujitsuThermalPrinter extends Plugin {
         mPrinter.PrintImage(bmp);
     }
 
+    @PluginMethod()
     public void PrintText(PluginCall call) {
         String code = call.getString("code");
         mPrinter.PrintText(code, null);

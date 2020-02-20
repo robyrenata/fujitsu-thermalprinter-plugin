@@ -7,7 +7,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7e56b298-3584-4fa8-8388-fcd0d1da67b3" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/id/codify/fujitsuthermalprinter/FujitsuThermalPrinter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/id/codify/fujitsuthermalprinter/FujitsuThermalPrinter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -30,14 +30,14 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/id/codify/fujitsuthermalprinter/FujitsuThermalPrinter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="344">
-              <caret line="134" column="25" selection-start-line="134" selection-start-column="16" selection-end-line="134" selection-end-column="25" />
+            <state relative-caret-position="296">
+              <caret line="72" column="61" selection-start-line="72" selection-start-column="61" selection-end-line="72" selection-end-column="61" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#3535#3727#0" expanded="true" />
-                <element signature="e#3726#3727#0" expanded="true" />
-                <element signature="e#3880#4072#0" expanded="true" />
-                <element signature="e#4071#4072#0" expanded="true" />
+                <element signature="e#3618#3843#0" expanded="true" />
+                <element signature="e#3842#3843#0" expanded="true" />
+                <element signature="e#3934#4209#0" expanded="true" />
+                <element signature="e#4208#4209#0" expanded="true" />
                 <element signature="e#4228#4229#0" expanded="true" />
               </folding>
             </state>
@@ -280,14 +280,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/id/codify/fujitsuthermalprinter/FujitsuThermalPrinter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="344">
-          <caret line="134" column="25" selection-start-line="134" selection-start-column="16" selection-end-line="134" selection-end-column="25" />
+        <state relative-caret-position="296">
+          <caret line="72" column="61" selection-start-line="72" selection-start-column="61" selection-end-line="72" selection-end-column="61" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#3535#3727#0" expanded="true" />
-            <element signature="e#3726#3727#0" expanded="true" />
-            <element signature="e#3880#4072#0" expanded="true" />
-            <element signature="e#4071#4072#0" expanded="true" />
+            <element signature="e#3618#3843#0" expanded="true" />
+            <element signature="e#3842#3843#0" expanded="true" />
+            <element signature="e#3934#4209#0" expanded="true" />
+            <element signature="e#4208#4209#0" expanded="true" />
             <element signature="e#4228#4229#0" expanded="true" />
           </folding>
         </state>
