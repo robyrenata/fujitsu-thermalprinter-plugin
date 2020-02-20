@@ -82,6 +82,9 @@ public class FujitsuThermalPrinter extends Plugin {
         HashMap<String, UsbDevice> deviceList = mUsbManager.getDeviceList();
         Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
         Boolean hasNext = deviceIterator.hasNext();
+        if(!hasNext){
+            call.error("Not Find Printer");
+        }
 
         while(deviceIterator.hasNext()) {
             mDevice = deviceIterator.next();
@@ -98,11 +101,6 @@ public class FujitsuThermalPrinter extends Plugin {
                 call.error("Not Find Printer");
             }
         }
-
-        if(!hasNext){
-            call.error("Not Find Printer");
-        }
-
     }
 
 
@@ -175,6 +173,7 @@ public class FujitsuThermalPrinter extends Plugin {
 
             JSObject res = new JSObject();
             res.put("grantedPerm", true);
+            res.put("message", "User granted permission");
             savedCall.success(res);
         }
     }
