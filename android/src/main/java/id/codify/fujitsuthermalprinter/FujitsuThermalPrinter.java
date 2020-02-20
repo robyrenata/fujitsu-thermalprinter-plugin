@@ -132,8 +132,12 @@ public class FujitsuThermalPrinter extends Plugin {
         mPrinter.PrintImage(bmp);
     }
 
-    public void PrintText(String str) {
-        mPrinter.PrintText(str, null);
+    public void PrintText(PluginCall call) {
+        String code = call.getString("code");
+        mPrinter.PrintText(code, null);
+        JSObject ret = new JSObject();
+        ret.put("message", "Success Print");
+        call.success(ret);
     }
 
     @Override
