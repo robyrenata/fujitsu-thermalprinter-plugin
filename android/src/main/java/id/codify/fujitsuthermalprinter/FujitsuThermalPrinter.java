@@ -94,8 +94,15 @@ public class FujitsuThermalPrinter extends Plugin {
                     (nProduct == 0x117A ||
                             nProduct == 0x11CA ||
                             nProduct == 0x126E )){
-                mUsbManager.requestPermission(mDevice,mPermissionIntent);
-                return;
+                if(hasPermission(ACTION_USB_PERMISSION)){
+                    JSObject res = new JSObject();
+                    res.put("message", "User already granted permission");
+                    call.success(res);
+                }else{
+                    mUsbManager.requestPermission(mDevice,mPermissionIntent);
+                    return;
+
+                }
             } else {
                 mDevice = null;
                 call.error("Not Find Printer");
@@ -141,10 +148,46 @@ public class FujitsuThermalPrinter extends Plugin {
 
     @PluginMethod()
     public void PrintText(PluginCall call) {
+        int nRtn ;
         String code = call.getString("code");
-        mPrinter.PrintText(code, null);
+        nRtn = mPrinter.SetLocale(8);
+
+        nRtn = mPrinter.PrintText(code, "SJIS");
+        nRtn = mPrinter.PaperFeed(64);
+        nRtn = mPrinter.CutPaper(0);
+
         JSObject ret = new JSObject();
-        ret.put("message", "Success Print");
+        ret.put("message", "Success Print Text");
+        call.success(ret);
+    }
+
+    @PluginMethod()
+    public void PrintBarcode(PluginCall call) {
+        int nRtn ;
+        String code = call.getString("code");
+        nRtn = mPrinter.SetLocale(8);
+
+        nRtn = mPrinter.PrintBarcode(2, code, 2, 0, 2, 100, 0) ;
+        nRtn = mPrinter.PaperFeed(64);
+        nRtn = mPrinter.CutPaper(0);
+
+        JSObject ret = new JSObject();
+        ret.put("message", "Success Print Barcode");
+        call.success(ret);
+    }
+
+    @PluginMethod()
+    public void PrintQR(PluginCall call) {
+        int nRtn ;
+        String code = call.getString("code");
+        nRtn = mPrinter.SetLocale(8);
+
+        nRtn = mPrinter.PrintQrCode(code, 0, 6, false, 0);
+        nRtn = mPrinter.PaperFeed(64);
+        nRtn = mPrinter.CutPaper(0);
+
+        JSObject ret = new JSObject();
+        ret.put("message", "Success Print QR");
         call.success(ret);
     }
 
