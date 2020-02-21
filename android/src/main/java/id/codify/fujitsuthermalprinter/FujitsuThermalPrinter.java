@@ -141,6 +141,21 @@ public class FujitsuThermalPrinter extends Plugin {
             }});
     }
 
+    @PluginMethod()
+    public void GetPrinterStatus(PluginCall call){
+        mRtn = mPrinter.GetPrinterStatus();
+        saveCall(call);
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                PluginCall savedCall = getSavedCall();
+
+                JSObject res = new JSObject();
+                res.put("message", StatusValue(mRtn));
+                savedCall.success(res);
+            }});
+    }
 
     public void PrintImageBmp(Bitmap bmp) {
         mPrinter.PrintImage(bmp);

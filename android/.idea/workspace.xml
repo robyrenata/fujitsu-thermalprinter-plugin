@@ -7,12 +7,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7e56b298-3584-4fa8-8388-fcd0d1da67b3" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gradle/4.10.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.1/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.10.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.1/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.10.1/taskHistory/taskHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.1/taskHistory/taskHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android.iml" beforeDir="false" afterPath="$PROJECT_DIR$/android.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/id/codify/fujitsuthermalprinter/FujitsuThermalPrinter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/id/codify/fujitsuthermalprinter/FujitsuThermalPrinter.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -36,8 +30,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/id/codify/fujitsuthermalprinter/FujitsuThermalPrinter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1602">
-              <caret line="116" column="23" lean-forward="true" selection-start-line="116" selection-start-column="23" selection-end-line="116" selection-end-column="23" />
+            <state relative-caret-position="364">
+              <caret line="158" column="4" selection-start-line="158" selection-start-column="4" selection-end-line="158" selection-end-column="4" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1374#2126#0" expanded="true" />
@@ -46,7 +40,9 @@
                 <element signature="e#4189#4190#0" expanded="true" />
                 <element signature="e#4343#4618#0" expanded="true" />
                 <element signature="e#4617#4618#0" expanded="true" />
-                <element signature="e#4711#4712#0" expanded="true" />
+                <element signature="e#4765#4953#0" expanded="true" />
+                <element signature="e#4952#4953#0" expanded="true" />
+                <element signature="e#5168#5169#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -89,6 +85,7 @@
       <find>getCriteriaForCall</find>
       <find>handler</find>
       <find>ACTION_USB_PERMISSION</find>
+      <find>StatusValue</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -233,8 +230,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/id/codify/fujitsuthermalprinter/FujitsuThermalPrinter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1602">
-          <caret line="116" column="23" lean-forward="true" selection-start-line="116" selection-start-column="23" selection-end-line="116" selection-end-column="23" />
+        <state relative-caret-position="364">
+          <caret line="158" column="4" selection-start-line="158" selection-start-column="4" selection-end-line="158" selection-end-column="4" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1374#2126#0" expanded="true" />
@@ -243,7 +240,9 @@
             <element signature="e#4189#4190#0" expanded="true" />
             <element signature="e#4343#4618#0" expanded="true" />
             <element signature="e#4617#4618#0" expanded="true" />
-            <element signature="e#4711#4712#0" expanded="true" />
+            <element signature="e#4765#4953#0" expanded="true" />
+            <element signature="e#4952#4953#0" expanded="true" />
+            <element signature="e#5168#5169#0" expanded="true" />
           </folding>
         </state>
       </provider>
