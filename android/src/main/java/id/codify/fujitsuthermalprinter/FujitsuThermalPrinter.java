@@ -278,9 +278,14 @@ public class FujitsuThermalPrinter extends Plugin {
     public void PrintImageBmp(PluginCall call) {
         String base64 = call.getString("base64");
         Integer cutPaper = call.getInt("cutPaper");
+        Integer paperFeed = isNullOrEmpty(call.getInt("paperFeed").toString()) ? call.getInt("paperFeed") : 64;
+
         byte[] decodedString = Base64.decode(base64, Base64.DEFAULT);
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
         nRtn = mPrinter.PrintImage(decodedByte);
+        
+        nRtn = mPrinter.PaperFeed(paperFeed);
 
         if(!isNullOrEmpty(cutPaper.toString())){
             nRtn = mPrinter.CutPaper(cutPaper);
