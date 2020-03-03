@@ -276,7 +276,7 @@ public class FujitsuThermalPrinter extends Plugin {
 
     @PluginMethod()
     public void PrintImageBmp(PluginCall call) {
-        String base64 = call.getString("base64");
+        String base64 = removePrefix(call.getString("base64"),"data:image/png;base64,");
         Integer cutPaper = call.getInt("cutPaper");
         Integer paperFeed = isNullOrEmpty(call.getInt("paperFeed").toString()) ? call.getInt("paperFeed") : 64;
 
@@ -284,7 +284,7 @@ public class FujitsuThermalPrinter extends Plugin {
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 
         nRtn = mPrinter.PrintImage(decodedByte);
-        
+
         nRtn = mPrinter.PaperFeed(paperFeed);
 
         if(!isNullOrEmpty(cutPaper.toString())){
@@ -596,5 +596,13 @@ public class FujitsuThermalPrinter extends Plugin {
         if(str != null && !str.isEmpty())
             return false;
         return true;
+    }
+
+    public static String removePrefix(String s, String prefix)
+    {
+        if (s != null && prefix != null && s.startsWith(prefix)){
+            return s.substring(prefix.length());
+        }
+        return s;
     }
 }
