@@ -106,5 +106,7 @@
     <orderEntry type="library" name="Gradle: __local_aars__:/Users/codify-dra/Workspaces/plugin/fujitsu-thermalprinter-plugin/android/libs/FitPrintAndroidUsb_v1011.jar:unspecified@jar" level="project" />
     <orderEntry type="module" module-name="capacitor-android" />
     <orderEntry type="module" module-name="capacitor-android" />
+    <orderEntry type="module" module-name="capacitor-android" />
+    <orderEntry type="module" module-name="capacitor-android" />
   </component>
 </module>

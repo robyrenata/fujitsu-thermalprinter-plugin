@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Handler;
+import android.util.Base64;
 import android.util.Log;
 
 import com.fujitsu.fitPrint.Library.FitPrintAndroidUsb_v1011.FitPrintAndroidUsb;
@@ -42,6 +44,7 @@ public class FujitsuThermalPrinter extends Plugin {
 
     private final Handler handler = new Handler();
     public int mRtn = 0 ;
+    int nRtn ;
 
     private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
 
@@ -81,31 +84,33 @@ public class FujitsuThermalPrinter extends Plugin {
         mUsbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
         HashMap<String, UsbDevice> deviceList = mUsbManager.getDeviceList();
         Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
-        Boolean hasNext = deviceIterator.hasNext();
-        if(!hasNext){
-            call.error("Not Find Printer");
-        }
 
-        while(deviceIterator.hasNext()) {
-            mDevice = deviceIterator.next();
-            int nProduct = mDevice.getProductId();
-            int nVendor = mDevice.getVendorId();
-            if(nVendor == 0x04C5 &&
-                    (nProduct == 0x117A ||
-                            nProduct == 0x11CA ||
-                            nProduct == 0x126E )){
-                if(hasPermission(ACTION_USB_PERMISSION)){
-                    JSObject res = new JSObject();
-                    res.put("message", "User already granted permission");
-                    call.success(res);
-                }else{
-                    mUsbManager.requestPermission(mDevice,mPermissionIntent);
-                    return;
+        if(hasPermission(ACTION_USB_PERMISSION)){
+            JSObject res = new JSObject();
+            res.put("message", "User already granted permission");
+            call.success(res);
+        }else{
+            Boolean hasNext = deviceIterator.hasNext();
 
-                }
-            } else {
-                mDevice = null;
+            if(!hasNext){
                 call.error("Not Find Printer");
+            }
+
+            while(deviceIterator.hasNext()) {
+                mDevice = deviceIterator.next();
+                int nProduct = mDevice.getProductId();
+                int nVendor = mDevice.getVendorId();
+                if(nVendor == 0x04C5 &&
+                        (nProduct == 0x117A ||
+                                nProduct == 0x11CA ||
+                                nProduct == 0x126E )){
+                        mUsbManager.requestPermission(mDevice,mPermissionIntent);
+                        return;
+                } else {
+                    mDevice = null;
+                    call.error("Not Find Printer");
+                }
+
             }
         }
     }
@@ -157,52 +162,191 @@ public class FujitsuThermalPrinter extends Plugin {
             }});
     }
 
-    public void PrintImageBmp(Bitmap bmp) {
-        mPrinter.PrintImage(bmp);
+
+    @PluginMethod()
+    public void OpenDrawer(PluginCall call){
+        Integer signal = call.getInt("signal");
+        Integer t1 = call.getInt("t1");
+        Integer t2 = call.getInt("t2");
+        mRtn = mPrinter.OpenDrawer(signal, t1, t2);
+        saveCall(call);
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                PluginCall savedCall = getSavedCall();
+
+                JSObject res = new JSObject();
+                res.put("message", DriverStatus(mRtn));
+                savedCall.success(res);
+            }});
+    }
+
+    @PluginMethod()
+    public void Beep(PluginCall call){
+        Integer t1 = call.getInt("t1");
+        Integer t2 = call.getInt("t2");
+        mRtn = mPrinter.Beep(t1, t2);
+        saveCall(call);
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                PluginCall savedCall = getSavedCall();
+
+                JSObject res = new JSObject();
+                res.put("message", DriverStatus(mRtn));
+                savedCall.success(res);
+            }});
+    }
+
+
+    @PluginMethod()
+    public void Buzzer(PluginCall call){
+        Integer pattern = call.getInt("pattern");
+        Integer count = call.getInt("count");
+        mRtn = mPrinter.Buzzer(pattern, count);
+        saveCall(call);
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                PluginCall savedCall = getSavedCall();
+
+                JSObject res = new JSObject();
+                res.put("message", DriverStatus(mRtn));
+                savedCall.success(res);
+            }});
+    }
+
+    @PluginMethod()
+    public void CutPapper(PluginCall call){
+        Integer cutType = call.getInt("cutType");
+        mRtn = mPrinter.CutPaper(cutType);
+        saveCall(call);
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                PluginCall savedCall = getSavedCall();
+
+                JSObject res = new JSObject();
+                res.put("message", DriverStatus(mRtn));
+                savedCall.success(res);
+            }});
+    }
+
+
+    @PluginMethod()
+    public void PrintPage(PluginCall call){
+        mRtn = mPrinter.PrintPage();
+        saveCall(call);
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                PluginCall savedCall = getSavedCall();
+
+                JSObject res = new JSObject();
+                res.put("message", DriverStatus(mRtn));
+                savedCall.success(res);
+            }});
+    }
+
+    @PluginMethod()
+    public void CancelPage(PluginCall call){
+        mRtn = mPrinter.CancelPage();
+        saveCall(call);
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                PluginCall savedCall = getSavedCall();
+
+                JSObject res = new JSObject();
+                res.put("message", DriverStatus(mRtn));
+                savedCall.success(res);
+            }});
+    }
+
+    @PluginMethod()
+    public void PrintImageBmp(PluginCall call) {
+        String bmp = call.getString("bmp");
+        Integer cutPaper = call.getInt("cutPaper");
+        byte[] decodedString = Base64.decode(bmp, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        nRtn = mPrinter.PrintImage(decodedByte);
+
+        if(!isNullOrEmpty(cutPaper.toString())){
+            nRtn = mPrinter.CutPaper(cutPaper);
+        }
+
+        JSObject ret = new JSObject();
+        ret.put("message", "Success Print Bitmap" + nRtn);
+        call.success(ret);
     }
 
     @PluginMethod()
     public void PrintText(PluginCall call) {
-        int nRtn ;
         String code = call.getString("code");
+        Integer paperFeed = isNullOrEmpty(call.getInt("paperFeed").toString()) ? call.getInt("paperFeed") : 64;
+        Integer cutPaper = call.getInt("cutPaper");
         nRtn = mPrinter.SetLocale(8);
 
         nRtn = mPrinter.PrintText(code, "SJIS");
-        nRtn = mPrinter.PaperFeed(64);
-        nRtn = mPrinter.CutPaper(0);
+
+        nRtn = mPrinter.PaperFeed(paperFeed);
+
+        if(!isNullOrEmpty(cutPaper.toString())){
+            nRtn = mPrinter.CutPaper(cutPaper);
+        }
 
         JSObject ret = new JSObject();
-        ret.put("message", "Success Print Text");
+        ret.put("message", "Success Print Text" + nRtn);
         call.success(ret);
     }
 
     @PluginMethod()
     public void PrintBarcode(PluginCall call) {
-        int nRtn ;
         String code = call.getString("code");
+        Integer paperFeed = isNullOrEmpty(call.getInt("paperFeed").toString()) ? call.getInt("paperFeed") : 64;
+        Integer barWidth = isNullOrEmpty(call.getInt("barWidth").toString()) ? call.getInt("barWidth") : 2;
+        Integer barHeight = isNullOrEmpty(call.getInt("barHeight").toString()) ? call.getInt("barHeight") : 100;
+        Integer cutPaper = call.getInt("cutPaper");
         nRtn = mPrinter.SetLocale(8);
 
-        nRtn = mPrinter.PrintBarcode(2, code, 2, 0, 2, 100, 0) ;
-        nRtn = mPrinter.PaperFeed(64);
-        nRtn = mPrinter.CutPaper(0);
+        nRtn = mPrinter.PrintBarcode(2, code, 2, 0, barWidth, barHeight, 0) ;
+        nRtn = mPrinter.PaperFeed(paperFeed);
+
+        if(!isNullOrEmpty(cutPaper.toString())){
+            nRtn = mPrinter.CutPaper(cutPaper);
+        }
 
         JSObject ret = new JSObject();
-        ret.put("message", "Success Print Barcode");
+        ret.put("message", "Success Print Barcode" + nRtn);
         call.success(ret);
     }
 
     @PluginMethod()
     public void PrintQR(PluginCall call) {
-        int nRtn ;
         String code = call.getString("code");
+
+        Integer paperFeed = isNullOrEmpty(call.getInt("paperFeed").toString()) ? call.getInt("paperFeed") : 64;
+        Integer model = isNullOrEmpty(call.getInt("model").toString()) ? call.getInt("model") : 0;
+        Integer cellSize = isNullOrEmpty(call.getInt("cellSize").toString()) ? call.getInt("cellSize") : 6;
+        Integer cutPaper = call.getInt("cutPaper");
+
         nRtn = mPrinter.SetLocale(8);
 
-        nRtn = mPrinter.PrintQrCode(code, 0, 6, false, 0);
-        nRtn = mPrinter.PaperFeed(64);
-        nRtn = mPrinter.CutPaper(0);
+        nRtn = mPrinter.PrintQrCode(code, model, cellSize, false, 0);
+        nRtn = mPrinter.PaperFeed(paperFeed);
+
+        if(!isNullOrEmpty(cutPaper.toString())){
+            nRtn = mPrinter.CutPaper(cutPaper);
+        }
 
         JSObject ret = new JSObject();
-        ret.put("message", "Success Print QR");
+        ret.put("message", "Success Print QR " + nRtn);
         call.success(ret);
     }
 
@@ -236,14 +380,6 @@ public class FujitsuThermalPrinter extends Plugin {
         }
     }
 
-    @PluginMethod()
-    public void echo(PluginCall call) {
-        String value = call.getString("value");
-
-        JSObject ret = new JSObject();
-        ret.put("value", value);
-        call.success(ret);
-    }
 
     private String StatusValue(int StatusNum)
     {
@@ -282,10 +418,12 @@ public class FujitsuThermalPrinter extends Plugin {
         {
             Result = "Hard Error(700) ";
         }
+
         else if(StatusNum == 1500)
         {
             Result = "Communication Error(1500) ";
         }
+
         else if(StatusNum == -3003)
         {
             Result = "Not Ready Status(-3003) ";
@@ -293,6 +431,78 @@ public class FujitsuThermalPrinter extends Plugin {
 
         return Result;
 
+    }
+
+    private String DriverStatus(int StatusNum)
+    {
+        String Result = "";
+
+        if(StatusNum == 1000)
+        {
+            Result = "Parameter Error(1000) ";
+        }
+        else if(StatusNum == 1001)
+        {
+            Result = "Invalid device is designated(1001) ";
+        }
+        else if(StatusNum == 1002)
+        {
+            Result = "NULL is designated(1002) ";
+        }
+        else if(StatusNum == 1003)
+        {
+            Result = "Length of data is incorrect.(1003) ";
+        }
+        else if(StatusNum == 1004)
+        {
+            Result = "Encode which is not defined is designated.(1004) ";
+        }
+        else if(StatusNum == 1005)
+        {
+            Result = "Value is out of limit.(1005) ";
+        }
+        else if(StatusNum == 1100)
+        {
+            Result = "Incorrect characters in barcode data, or out of specifications.(1100) ";
+        }
+        else if(StatusNum == 1101)
+        {
+            Result = "Incorrect length of barcode data.(1101) ";
+        }
+        else if(StatusNum == 2000)
+        {
+            Result = "Error in transmission.(2000) ";
+        }
+        else if(StatusNum == 2001)
+        {
+            Result = "Failed connection(2001) ";
+        }
+        else if(StatusNum == 2002)
+        {
+            Result = "Not connected.(2002) ";
+        }
+        else if(StatusNum == 2003)
+        {
+            Result = "Time out(2003) ";
+        }
+        else if(StatusNum == 3000)
+        {
+            Result = "Failed access of file(3000) ";
+        }
+        else if(StatusNum == 3001)
+        {
+            Result = "Failed read-in file(3001) ";
+        }
+        else if(StatusNum == 3002)
+        {
+            Result = "Failed the status receiving.(3002) ";
+        }
+        else if(StatusNum == 3003)
+        {
+            Result = "The setting is the status receiving.(3003) ";
+        }
+
+        return Result;
     }
 
     private String ErrorValue(int ErrorStatus)
@@ -370,5 +580,11 @@ public class FujitsuThermalPrinter extends Plugin {
 
         return Result;
 
+    }
+
+    public static boolean isNullOrEmpty(String str) {
+        if(str != null && !str.isEmpty())
+            return false;
+        return true;
     }
 }
