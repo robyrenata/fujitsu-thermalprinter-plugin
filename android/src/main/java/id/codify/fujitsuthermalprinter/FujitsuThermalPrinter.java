@@ -125,8 +125,13 @@ public class FujitsuThermalPrinter extends Plugin {
             @Override
             public void run() {
                 PluginCall savedCall = getSavedCall();
-
-                savedCall.error(ErrorValue(mRtn));
+                if(mRtn == 0){
+                    JSObject res = new JSObject();
+                    res.put("message", "Printer Connected");
+                    savedCall.success(res);
+                }else{
+                    savedCall.error(ErrorValue(mRtn));
+                }
             }});
     }
 
@@ -271,9 +276,9 @@ public class FujitsuThermalPrinter extends Plugin {
 
     @PluginMethod()
     public void PrintImageBmp(PluginCall call) {
-        String bmp = call.getString("bmp");
+        String base64 = call.getString("base64");
         Integer cutPaper = call.getInt("cutPaper");
-        byte[] decodedString = Base64.decode(bmp, Base64.DEFAULT);
+        byte[] decodedString = Base64.decode(base64, Base64.DEFAULT);
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
         nRtn = mPrinter.PrintImage(decodedByte);
 
